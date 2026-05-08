@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>4Founders</title>
+    <meta
+      name="description"
+      content="A trusted platform where early software founders get structured feedback, protect their ideas, improve their products, and prepare for launch."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #10202f;
+        --muted: #5b6775;
+        --line: #d7dee7;
+        --blue: #0f6e8c;
+        --green: #17775f;
+        --gold: #a36913;
+        --paper: #f8fafc;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      header,
+      main,
+      footer {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 22px 0;
+      }
+
+      .brand {
+        color: var(--blue);
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        font-size: 14px;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .hero {
+        display: grid;
+        gap: 34px;
+        padding: 64px 0 44px;
+      }
+
+      h1 {
+        max-width: 880px;
+        margin: 0;
+        font-size: clamp(42px, 8vw, 78px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(18px, 2vw, 22px);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        border: 1px solid var(--blue);
+        border-radius: 8px;
+        padding: 0 18px;
+        background: var(--blue);
+        color: white;
+        font-weight: 700;
+      }
+
+      .button.secondary {
+        background: transparent;
+        color: var(--blue);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 30px 0;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--white);
+        padding: 22px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .panel p,
+      li {
+        color: var(--muted);
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .band {
+        margin: 42px 0;
+        padding: 34px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--white);
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        color: var(--ink);
+        font-size: 24px;
+      }
+
+      footer {
+        padding: 42px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 800px) {
+        nav {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .grid,
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding-top: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Primary">
+        <div class="brand">4Founders</div>
+        <div class="nav-links">
+          <a href="#mission">Mission</a>
+          <a href="#platform">Platform</a>
+          <a href="#trust">Trust</a>
+          <a href="https://github.com/" rel="noreferrer">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="mission">
+        <h1>Helping the best ideas grow, launch, and change the world.</h1>
+        <p class="lead">
+          A trusted platform where early software founders get structured feedback, protect
+          their ideas, improve their products, and earn the support needed to reach the market
+          with real impact.
+        </p>
+        <div class="actions">
+          <a class="button" href="#platform">Review the MVP</a>
+          <a class="button secondary" href="#trust">See protection model</a>
+        </div>
+      </section>
+
+      <section class="grid" id="platform">
+        <article class="panel">
+          <h3>Founder Workspace</h3>
+          <p>Protected submissions, GitHub-native project setup, version iteration, feedback review, and expert support requests.</p>
+        </article>
+        <article class="panel">
+          <h3>Reviewer Workflow</h3>
+          <p>Rubric scoring, structured written feedback, confidence votes, useful reputation signals, and trust-weighted review paths.</p>
+        </article>
+        <article class="panel">
+          <h3>Expert Finalization</h3>
+          <p>Launch readiness assessments, blockers, fixes, disclosure constraints, and go-live recommendations for selected projects.</p>
+        </article>
+      </section>
+
+      <section class="band" id="trust">
+        <h2>Built for protected evaluation</h2>
+        <div class="metrics">
+          <div class="metric"><strong>4</strong>visibility modes</div>
+          <div class="metric"><strong>10</strong>rubric dimensions</div>
+          <div class="metric"><strong>7</strong>launch stages</div>
+          <div class="metric"><strong>5</strong>role families</div>
+        </div>
+      </section>
+
+      <section class="band">
+        <h2>What ships in the MVP</h2>
+        <ul>
+          <li>Next.js app with Prisma, PostgreSQL, NextAuth, Zod, React Hook Form, and Tailwind.</li>
+          <li>Role-aware founder, reviewer, expert, and moderation workspaces.</li>
+          <li>Asset visibility, disclosure requests, access logs, moderation cases, badges, and reputation events.</li>
+          <li>Seeded demo data covering users, categories, projects, versions, reviews, expert assessments, and leaderboards.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      4Founders MVP. Full application requires a Node host and PostgreSQL; this static page is GitHub Pages compatible.
+    </footer>
+  </body>
+</html>

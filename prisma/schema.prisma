@@ -1,0 +1,531 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleType {
+  FOUNDER
+  REVIEWER
+  TRUSTED_REVIEWER
+  SENIOR_EXPERT
+  ADMIN
+  MODERATOR
+}
+
+enum VisibilityMode {
+  PUBLIC
+  LIMITED
+  PROTECTED
+  EXPERT_ONLY
+}
+
+enum ProjectStage {
+  DRAFT
+  UNDER_REVIEW
+  IMPROVING
+  CATEGORY_STRONG
+  LAUNCH_CANDIDATE
+  EXPERT_FINALIZATION
+  READY_FOR_GO_LIVE
+}
+
+enum ReviewStatus {
+  DRAFT
+  SUBMITTED
+  FLAGGED
+  ARCHIVED
+}
+
+enum ConfidenceLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ModerationStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+  DISMISSED
+}
+
+enum BadgeType {
+  QUALITY
+  CONSISTENCY
+  IMPROVER
+  TRUST
+  LEADERBOARD
+}
+
+enum VoteType {
+  COMPARATIVE
+  CONFIDENCE
+  IMPROVEMENT
+}
+
+enum RubricDimension {
+  PROBLEM_CLARITY
+  VALUE_PROPOSITION_CLARITY
+  PRODUCT_USABILITY
+  TECHNICAL_QUALITY
+  DOCUMENTATION_QUALITY
+  DIFFERENTIATION
+  ADOPTION_READINESS
+  LAUNCH_READINESS
+  IMPROVEMENT_RESPONSIVENESS
+  TRUST_AND_SAFETY_HYGIENE
+}
+
+enum AssetType {
+  SCREENSHOT
+  VIDEO
+  DOC
+  LINK
+  BUILD
+  ARCHITECTURE_NOTE
+  ROADMAP
+  DEPLOYMENT_NOTE
+}
+
+enum SupportRequestStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum LaunchRecommendation {
+  NOT_READY
+  READY_WITH_FIXES
+  READY_FOR_GO_LIVE
+}
+
+enum NotificationType {
+  REVIEW_SUBMITTED
+  ACCESS_REQUEST
+  MODERATION_ALERT
+  EXPERT_UPDATE
+  SYSTEM
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  passwordHash   String?
+  name           String
+  image          String?
+  githubUsername String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  accounts               Account[]
+  sessions               Session[]
+  userRoles              UserRole[]
+  founderProfile         FounderProfile?
+  reviewerProfile        ReviewerProfile?
+  expertProfile          ExpertProfile?
+  ownedProjects          Project[]                @relation("ProjectOwner")
+  reviews                Review[]
+  votes                  Vote[]
+  reputationEvents       ReputationEvent[]
+  userBadges             UserBadge[]
+  accessLogs             AccessLog[]
+  moderationCases        ModerationCase[]         @relation("CaseReporter")
+  moderatedCases         ModerationCase[]         @relation("CaseModerator")
+  expertSupportRequests  ExpertSupportRequest[]   @relation("SupportFounder")
+  assessments            LaunchReadinessAssessment[]
+  notifications          Notification[]
+  disclosureRequests     DisclosureRequest[]      @relation("DisclosureRequester")
+  disclosureDecisions    DisclosureRequest[]      @relation("DisclosureDecider")
+  assetPermissions       AssetPermission[]
+}
+
+model Role {
+  id        String   @id @default(cuid())
+  type      RoleType @unique
+  createdAt DateTime @default(now())
+
+  userRoles UserRole[]
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+model FounderProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  tagline      String?
+  organization String?
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReviewerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  trustScore      Int      @default(0)
+  reputationScore Int      @default(0)
+  reviewCount     Int      @default(0)
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ExpertProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  specialty      String
+  yearsExperience Int     @default(10)
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  projects Project[]
+}
+
+model Project {
+  id                         String         @id @default(cuid())
+  ownerId                    String
+  categoryId                 String
+  name                       String
+  slug                       String         @unique
+  valueProposition           String
+  targetUser                 String
+  productStage               String
+  githubRepoUrl              String
+  websiteUrl                 String?
+  contactInfo                String?
+  privateTestCredentials     String?
+  problemStatement           String
+  differentiationStatement   String
+  preferredFeedbackFocus     String
+  visibilityMode             VisibilityMode @default(PROTECTED)
+  stage                      ProjectStage   @default(DRAFT)
+  isFeaturedPublic           Boolean        @default(false)
+  createdAt                  DateTime       @default(now())
+  updatedAt                  DateTime       @updatedAt
+
+  owner                     User                        @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  category                  Category                    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  visibilityPolicy          VisibilityPolicy?
+  versions                  ProjectVersion[]
+  assets                    Asset[]
+  reviews                   Review[]
+  feedbackThemes            FeedbackTheme[]
+  votes                     Vote[]
+  accessLogs                AccessLog[]
+  moderationCases           ModerationCase[]
+  expertSupportRequests     ExpertSupportRequest[]
+  launchReadinessAssessments LaunchReadinessAssessment[]
+  disclosureRequests        DisclosureRequest[]
+}
+
+model VisibilityPolicy {
+  id                         String         @id @default(cuid())
+  projectId                  String         @unique
+  defaultVisibility          VisibilityMode @default(PROTECTED)
+  productDescriptionLevel    VisibilityMode @default(LIMITED)
+  screenshotsLevel           VisibilityMode @default(PROTECTED)
+  walkthroughVideoLevel      VisibilityMode @default(PROTECTED)
+  demoLinkLevel              VisibilityMode @default(LIMITED)
+  privateBuildAccessLevel    VisibilityMode @default(EXPERT_ONLY)
+  architectureNotesLevel     VisibilityMode @default(EXPERT_ONLY)
+  githubVisibilityLevel      VisibilityMode @default(EXPERT_ONLY)
+  roadmapLevel               VisibilityMode @default(PROTECTED)
+  differentiatingFeaturesLevel VisibilityMode @default(PROTECTED)
+  deploymentDetailsLevel     VisibilityMode @default(EXPERT_ONLY)
+  createdAt                  DateTime       @default(now())
+  updatedAt                  DateTime       @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectVersion {
+  id                  String       @id @default(cuid())
+  projectId           String
+  versionNumber       Int
+  changelog           String?
+  launchGoals         String?
+  knownWeaknesses     String?
+  privateReviewerNotes String?
+  waitlistLink        String?
+  createdAt           DateTime     @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reviews Review[]
+  assets  Asset[]
+
+  @@unique([projectId, versionNumber])
+}
+
+model Asset {
+  id             String         @id @default(cuid())
+  projectId      String
+  versionId      String?
+  type           AssetType
+  label          String
+  url            String
+  visibilityMode VisibilityMode
+  isSensitive    Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  version     ProjectVersion?   @relation(fields: [versionId], references: [id], onDelete: SetNull)
+  permissions AssetPermission[]
+  accessLogs  AccessLog[]
+}
+
+model AssetPermission {
+  id          String   @id @default(cuid())
+  assetId     String
+  userId      String
+  canView     Boolean  @default(true)
+  canDownload Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, userId])
+}
+
+model Review {
+  id                        String          @id @default(cuid())
+  projectId                 String
+  projectVersionId          String?
+  reviewerId                String
+  status                    ReviewStatus    @default(SUBMITTED)
+  confidenceLevel           ConfidenceLevel
+  whatWorks                 String
+  whatIsWeak                String
+  whatIsUnclear             String
+  highestPriorityImprovement String
+  weightedScore             Float?
+  createdAt                 DateTime        @default(now())
+
+  project         Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectVersion  ProjectVersion?       @relation(fields: [projectVersionId], references: [id], onDelete: SetNull)
+  reviewer        User                  @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  dimensionScores ReviewDimensionScore[]
+  moderationCases ModerationCase[]
+}
+
+model ReviewDimensionScore {
+  id        String          @id @default(cuid())
+  reviewId  String
+  dimension RubricDimension
+  score     Int
+  rationale String
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, dimension])
+}
+
+model FeedbackTheme {
+  id        String   @id @default(cuid())
+  projectId String
+  theme     String
+  count     Int      @default(1)
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Vote {
+  id         String   @id @default(cuid())
+  projectId  String
+  userId     String
+  type       VoteType
+  value      Int
+  confidence Int
+  createdAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReputationEvent {
+  id          String   @id @default(cuid())
+  userId      String
+  delta       Int
+  reason      String
+  contextJson String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Badge {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  label       String
+  description String
+  type        BadgeType
+  createdAt   DateTime  @default(now())
+
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  awardedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+}
+
+model AccessLog {
+  id         String   @id @default(cuid())
+  projectId  String
+  assetId    String?
+  actorId    String
+  action     String
+  ipAddress  String?
+  userAgent  String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  asset   Asset?  @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  actor   User    @relation(fields: [actorId], references: [id], onDelete: Cascade)
+}
+
+model ModerationCase {
+  id              String           @id @default(cuid())
+  projectId       String?
+  reviewId        String?
+  reporterId      String
+  assignedAdminId String?
+  status          ModerationStatus @default(OPEN)
+  reason          String
+  resolution      String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  project       Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  review        Review?  @relation(fields: [reviewId], references: [id], onDelete: SetNull)
+  reporter      User     @relation("CaseReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  assignedAdmin User?    @relation("CaseModerator", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+}
+
+model ExpertSupportRequest {
+  id                String               @id @default(cuid())
+  projectId         String
+  founderId         String
+  status            SupportRequestStatus @default(REQUESTED)
+  requestNote       String
+  founderDisclosure String?
+  createdAt         DateTime             @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  founder User    @relation("SupportFounder", fields: [founderId], references: [id], onDelete: Cascade)
+  assessments LaunchReadinessAssessment[]
+}
+
+model LaunchReadinessAssessment {
+  id              String               @id @default(cuid())
+  projectId       String
+  expertId        String
+  supportRequestId String?
+  blockers        String
+  fixes           String
+  recommendation  LaunchRecommendation
+  founderFollowUp String?
+  createdAt       DateTime             @default(now())
+
+  project        Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  expert         User                  @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  supportRequest ExpertSupportRequest? @relation(fields: [supportRequestId], references: [id], onDelete: SetNull)
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DisclosureRequest {
+  id          String               @id @default(cuid())
+  projectId   String
+  requesterId String
+  decidedById String?
+  requestedLevel VisibilityMode
+  notes       String?
+  approved    Boolean?
+  createdAt   DateTime             @default(now())
+  decidedAt   DateTime?
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  requester User    @relation("DisclosureRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  decidedBy User?   @relation("DisclosureDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
