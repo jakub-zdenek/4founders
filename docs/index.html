@@ -238,6 +238,39 @@
         background: var(--white);
       }
 
+      .workflow-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .workflow-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .workflow-list li {
+        display: flex;
+        gap: 10px;
+      }
+
+      .workflow-list span {
+        display: inline-flex;
+        width: 24px;
+        height: 24px;
+        flex: 0 0 24px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: #e9f7f8;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
       .metrics {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -264,6 +297,7 @@
 
         .hero,
         .grid,
+        .workflow-grid,
         .metrics {
           grid-template-columns: 1fr;
         }
@@ -339,6 +373,50 @@
           <p>We believe the world belongs to the crazy ones, because the people who are crazy enough to think they can change the world are the ones who do.</p>
           <a class="card-action" href="https://github.com/jakub-zdenek/4founders#readme">Create founder profile -&gt;</a>
         </article>
+      </section>
+
+      <section class="band">
+        <h2>Onboarding workflows</h2>
+        <p class="lead">Three ways to join the collaboration layer with enough trust, clarity, and protection to make the work useful.</p>
+        <br />
+        <div class="workflow-grid">
+          <article class="panel">
+            <h3>Mentor profile</h3>
+            <ol class="workflow-list">
+              <li><span>1</span>Create a profile.</li>
+              <li><span>2</span>Explain why founders should believe you can help.</li>
+              <li><span>3</span>Describe how you can support.</li>
+              <li><span>4</span>Choose the areas where you can support.</li>
+              <li><span>5</span>Link GitHub to show credibility.</li>
+              <li><span>6</span>Share what you like to support, because passion is key.</li>
+            </ol>
+          </article>
+          <article class="panel">
+            <h3>Founder path</h3>
+            <ol class="workflow-list">
+              <li><span>1</span>Create a profile and tell us your drive and motivation.</li>
+              <li><span>2</span>Choose a restricted starting area.</li>
+              <li><span>3</span>Explain the problem you want to solve and why.</li>
+              <li><span>4</span>Describe who benefits and who the user is.</li>
+              <li><span>5</span>Explain how you want to solve it.</li>
+              <li><span>6</span>Add a short video or presentation.</li>
+              <li><span>7</span>Choose public, semi-private, or private review mode.</li>
+              <li><span>8</span>Tell us what help and support you need.</li>
+              <li><span>9</span>Tell us if you want to start building a team.</li>
+              <li><span>10</span>Improve from feedback and see your progress over time.</li>
+            </ol>
+          </article>
+          <article class="panel">
+            <h3>Participant profile</h3>
+            <ol class="workflow-list">
+              <li><span>1</span>Create a profile.</li>
+              <li><span>2</span>Describe how you can support.</li>
+              <li><span>3</span>Choose the areas where you can support.</li>
+              <li><span>4</span>Link GitHub to show credibility.</li>
+              <li><span>5</span>Share what you like to support, because passion is key.</li>
+            </ol>
+          </article>
+        </div>
       </section>
 
       <section class="band" id="trust">

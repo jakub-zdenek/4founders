@@ -73,6 +73,52 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader><CardTitle>Founder workflow brief</CardTitle></CardHeader>
+        <CardContent className="grid gap-4 text-sm text-slate-700 md:grid-cols-2">
+          <div>
+            <p className="font-semibold text-slate-900">Drive and motivation</p>
+            <p>{project.founderMotivation ?? "Not shared yet"}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Problem and why</p>
+            <p>{project.problemStatement}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Who benefits</p>
+            <p>{project.targetUser}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Solution approach</p>
+            <p>{project.solutionApproach ?? "Not shared yet"}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Presentation</p>
+            {project.presentationUrl ? (
+              <a href={project.presentationUrl} className="text-cyan-700 hover:underline">
+                {project.presentationUrl}
+              </a>
+            ) : (
+              <p>Not shared yet</p>
+            )}
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Feedback and disclosure</p>
+            <p>{project.preferredFeedbackFocus}</p>
+            {project.sharingPreference && <p className="mt-1 text-slate-500">{project.sharingPreference}</p>}
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Support requested</p>
+            <p>{project.supportNeeded ?? "Not shared yet"}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">Team building</p>
+            <p>{project.teamBuildingInterest ? "Founder wants to meet collaborators." : "Not marked yet."}</p>
+            {project.teamNeeds && <p className="mt-1 text-slate-500">{project.teamNeeds}</p>}
+          </div>
+        </CardContent>
+      </Card>
+
       <ExpertSupportRequestForm projectId={project.id} />
     </div>
   );

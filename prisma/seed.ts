@@ -118,6 +118,10 @@ async function seedUsers() {
         data: {
           userId: user.id,
           tagline: "Building software with durable real-world impact",
+          motivation:
+            "I want to turn painful, repeated software launch lessons into tools that help small teams ship safely.",
+          supportNeeded: "Launch feedback, technical review, and introductions to early design partners.",
+          teamBuildingInterest: true,
         },
       });
     }
@@ -129,6 +133,10 @@ async function seedUsers() {
           trustScore: spec.roles.includes(RoleType.TRUSTED_REVIEWER) ? 85 : 45,
           reputationScore: spec.roles.includes(RoleType.TRUSTED_REVIEWER) ? 92 : 54,
           reviewCount: spec.roles.includes(RoleType.TRUSTED_REVIEWER) ? 34 : 12,
+          supportApproach: "Hands-on testing, product clarity feedback, and documentation review.",
+          supportAreas: "Developer productivity, AI builder tools, and onboarding UX.",
+          githubUrl: "https://github.com/demo-reviewer",
+          passionStatement: "I like helping technical founders make complex products easier for first users.",
         },
       });
     }
@@ -139,6 +147,12 @@ async function seedUsers() {
           userId: user.id,
           specialty: "Launch architecture and technical due diligence",
           yearsExperience: 14,
+          credibilityStatement:
+            "I have led production launches, scaled engineering teams, and reviewed critical architecture before go-live.",
+          supportApproach: "I help founders find launch blockers, simplify architecture, and focus final execution.",
+          supportAreas: "Infrastructure, launch readiness, reliability, and technical diligence.",
+          githubUrl: "https://github.com/demo-expert",
+          passionStatement: "I like supporting founders who are solving important infrastructure and developer workflow problems.",
         },
       });
     }
@@ -276,11 +290,20 @@ async function seedProjects(users: Record<string, string>, categories: Record<st
         websiteUrl: `https://${p.slug}.example.com`,
         contactInfo: `${p.slug}@example.com`,
         privateTestCredentials: "test-user / demo-pass",
+        founderMotivation:
+          "The founder has felt this problem directly while trying to launch early software with limited senior feedback.",
         problemStatement:
           "Founders need structured, credible feedback without exposing sensitive details too early.",
+        solutionApproach:
+          "The product combines a focused workflow, protected disclosure, and reviewer accountability to create safer early evaluation.",
         differentiationStatement:
           "Combines protected disclosure controls with weighted reviewer quality signals.",
         preferredFeedbackFocus: "Launch readiness, UX clarity, and technical risk reduction",
+        presentationUrl: `https://${p.slug}.example.com/pitch`,
+        sharingPreference: "Public summary is allowed, but architecture and repo details require approved reviewer access.",
+        supportNeeded: "Looking for launch-readiness review, beta users, and category-specific expert feedback.",
+        teamBuildingInterest: i % 2 === 0,
+        teamNeeds: i % 2 === 0 ? "Interested in meeting product-minded engineers and early testers." : null,
         visibilityMode: p.visibilityMode,
         stage: p.stage,
         isFeaturedPublic: i % 3 === 0,

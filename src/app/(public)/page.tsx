@@ -33,6 +33,45 @@ const paths = [
   },
 ];
 
+const onboardingWorkflows = [
+  {
+    title: "Mentor profile",
+    steps: [
+      "Create a profile.",
+      "Explain why founders should believe you can help.",
+      "Describe how you can support.",
+      "Choose the areas where you can support.",
+      "Link GitHub to show credibility.",
+      "Share what you like to support, because passion is key.",
+    ],
+  },
+  {
+    title: "Founder path",
+    steps: [
+      "Create a profile and tell us your drive and motivation.",
+      "Choose a restricted starting area.",
+      "Explain the problem you want to solve and why.",
+      "Describe who benefits and who the user is.",
+      "Explain how you want to solve it.",
+      "Add a short video or presentation.",
+      "Choose public, semi-private, or private review mode.",
+      "Tell us what help and support you need.",
+      "Tell us if you want to start building a team.",
+      "Improve from feedback and see your progress over time.",
+    ],
+  },
+  {
+    title: "Participant profile",
+    steps: [
+      "Create a profile.",
+      "Describe how you can support.",
+      "Choose the areas where you can support.",
+      "Link GitHub to show credibility.",
+      "Share what you like to support, because passion is key.",
+    ],
+  },
+];
+
 export default async function HomePage() {
   const featured = await prisma.project
     .findMany({
@@ -113,6 +152,38 @@ export default async function HomePage() {
             </CardContent>
           </Card>
         ))}
+      </section>
+
+      <section className="space-y-5">
+        <div>
+          <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">Onboarding workflows</Badge>
+          <h2 className="mt-3 text-3xl font-bold text-slate-950">Three ways to join the collaboration layer</h2>
+          <p className="mt-2 max-w-3xl text-slate-600">
+            Each path collects the information needed to build trust, protect sensitive ideas, and
+            match people with the right kind of support.
+          </p>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-3">
+          {onboardingWorkflows.map((workflow) => (
+            <Card key={workflow.title} className="border-slate-200 bg-white">
+              <CardHeader>
+                <CardTitle>{workflow.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ol className="space-y-3 text-sm text-slate-700">
+                  {workflow.steps.map((item) => (
+                    <li key={item} className="flex gap-3">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-xs font-bold text-cyan-800">
+                        {workflow.steps.indexOf(item) + 1}
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">

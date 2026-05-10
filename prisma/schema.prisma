@@ -166,11 +166,14 @@ model UserRole {
 }
 
 model FounderProfile {
-  id           String   @id @default(cuid())
-  userId       String   @unique
-  tagline      String?
-  organization String?
-  createdAt    DateTime @default(now())
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  tagline              String?
+  organization         String?
+  motivation           String?
+  supportNeeded        String?
+  teamBuildingInterest Boolean  @default(false)
+  createdAt            DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -181,17 +184,26 @@ model ReviewerProfile {
   trustScore      Int      @default(0)
   reputationScore Int      @default(0)
   reviewCount     Int      @default(0)
+  supportApproach String?
+  supportAreas    String?
+  githubUrl       String?
+  passionStatement String?
   createdAt       DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ExpertProfile {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  specialty      String
-  yearsExperience Int     @default(10)
-  createdAt      DateTime @default(now())
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  specialty             String
+  yearsExperience       Int      @default(10)
+  credibilityStatement  String?
+  supportApproach       String?
+  supportAreas          String?
+  githubUrl             String?
+  passionStatement      String?
+  createdAt             DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -219,9 +231,16 @@ model Project {
   websiteUrl                 String?
   contactInfo                String?
   privateTestCredentials     String?
+  founderMotivation          String?
   problemStatement           String
+  solutionApproach           String?
   differentiationStatement   String
   preferredFeedbackFocus     String
+  presentationUrl            String?
+  sharingPreference          String?
+  supportNeeded              String?
+  teamBuildingInterest       Boolean        @default(false)
+  teamNeeds                  String?
   visibilityMode             VisibilityMode @default(PROTECTED)
   stage                      ProjectStage   @default(DRAFT)
   isFeaturedPublic           Boolean        @default(false)

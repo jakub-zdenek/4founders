@@ -9,6 +9,52 @@ const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(128),
   intent: z.enum(["founder", "mentor", "participant"]).default("founder"),
+  founderMotivation: z.string().max(1500).optional(),
+  supportApproach: z.string().max(1500).optional(),
+  supportAreas: z.string().max(800).optional(),
+  githubUrl: z.string().url().optional().or(z.literal("")),
+  credibilityStatement: z.string().max(1500).optional(),
+  passionStatement: z.string().max(1500).optional(),
+}).superRefine((value, ctx) => {
+  if (value.intent === "founder" && !value.founderMotivation?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Founder motivation is required",
+      path: ["founderMotivation"],
+    });
+  }
+
+  if (value.intent === "mentor" && !value.credibilityStatement?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Credibility statement is required",
+      path: ["credibilityStatement"],
+    });
+  }
+
+  if ((value.intent === "mentor" || value.intent === "participant") && !value.supportApproach?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Support approach is required",
+      path: ["supportApproach"],
+    });
+  }
+
+  if ((value.intent === "mentor" || value.intent === "participant") && !value.supportAreas?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Support areas are required",
+      path: ["supportAreas"],
+    });
+  }
+
+  if ((value.intent === "mentor" || value.intent === "participant") && !value.passionStatement?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Passion statement is required",
+      path: ["passionStatement"],
+    });
+  }
 });
 
 const intentConfig = {
@@ -62,8 +108,13 @@ export async function POST(request: NextRequest) {
     if (payload.intent === "mentor") {
       data.expertProfile = {
         create: {
-          specialty: "Founder mentorship and launch guidance",
+          specialty: payload.supportAreas || "Founder mentorship and launch guidance",
           yearsExperience: 10,
+          credibilityStatement: payload.credibilityStatement || null,
+          supportApproach: payload.supportApproach || null,
+          supportAreas: payload.supportAreas || null,
+          githubUrl: payload.githubUrl || null,
+          passionStatement: payload.passionStatement || null,
         },
       };
     }
@@ -74,6 +125,10 @@ export async function POST(request: NextRequest) {
           trustScore: 0,
           reputationScore: 0,
           reviewCount: 0,
+          supportApproach: payload.supportApproach || null,
+          supportAreas: payload.supportAreas || null,
+          githubUrl: payload.githubUrl || null,
+          passionStatement: payload.passionStatement || null,
         },
       };
     }
@@ -82,6 +137,7 @@ export async function POST(request: NextRequest) {
       data.founderProfile = {
         create: {
           tagline: "Building a new idea on 4Founders",
+          motivation: payload.founderMotivation || null,
         },
       };
     }

@@ -13,6 +13,9 @@ export default async function ProfilePage() {
       userRoles: { include: { role: true } },
       userBadges: { include: { badge: true } },
       reputationEvents: { orderBy: { createdAt: "desc" }, take: 10 },
+      founderProfile: true,
+      reviewerProfile: true,
+      expertProfile: true,
     },
   });
 
@@ -35,6 +38,40 @@ export default async function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+      {user.founderProfile && (
+        <Card>
+          <CardHeader><CardTitle>Founder profile</CardTitle></CardHeader>
+          <CardContent className="space-y-3 text-sm text-slate-700">
+            <p><strong>Tagline:</strong> {user.founderProfile.tagline ?? "Not set"}</p>
+            <p><strong>Drive and motivation:</strong> {user.founderProfile.motivation ?? "Not set"}</p>
+            <p><strong>Support needed:</strong> {user.founderProfile.supportNeeded ?? "Not set"}</p>
+            <p><strong>Team building:</strong> {user.founderProfile.teamBuildingInterest ? "Interested" : "Not marked yet"}</p>
+          </CardContent>
+        </Card>
+      )}
+      {user.expertProfile && (
+        <Card>
+          <CardHeader><CardTitle>Mentor profile</CardTitle></CardHeader>
+          <CardContent className="space-y-3 text-sm text-slate-700">
+            <p><strong>Why founders should believe you:</strong> {user.expertProfile.credibilityStatement ?? "Not set"}</p>
+            <p><strong>How you can support:</strong> {user.expertProfile.supportApproach ?? "Not set"}</p>
+            <p><strong>Support areas:</strong> {user.expertProfile.supportAreas ?? user.expertProfile.specialty}</p>
+            <p><strong>GitHub:</strong> {user.expertProfile.githubUrl ? <a href={user.expertProfile.githubUrl} className="text-cyan-700 hover:underline">{user.expertProfile.githubUrl}</a> : "Not set"}</p>
+            <p><strong>Passion:</strong> {user.expertProfile.passionStatement ?? "Not set"}</p>
+          </CardContent>
+        </Card>
+      )}
+      {user.reviewerProfile && (
+        <Card>
+          <CardHeader><CardTitle>Participant profile</CardTitle></CardHeader>
+          <CardContent className="space-y-3 text-sm text-slate-700">
+            <p><strong>How you can support:</strong> {user.reviewerProfile.supportApproach ?? "Not set"}</p>
+            <p><strong>Support areas:</strong> {user.reviewerProfile.supportAreas ?? "Not set"}</p>
+            <p><strong>GitHub:</strong> {user.reviewerProfile.githubUrl ? <a href={user.reviewerProfile.githubUrl} className="text-cyan-700 hover:underline">{user.reviewerProfile.githubUrl}</a> : "Not set"}</p>
+            <p><strong>Passion:</strong> {user.reviewerProfile.passionStatement ?? "Not set"}</p>
+          </CardContent>
+        </Card>
+      )}
       <Card>
         <CardHeader><CardTitle>Reputation events</CardTitle></CardHeader>
         <CardContent className="space-y-1 text-sm">
