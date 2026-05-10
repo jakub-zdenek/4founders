@@ -15,9 +15,11 @@
         --muted: #5b6775;
         --line: #d7dee7;
         --blue: #0f6e8c;
+        --cyan: #22d3ee;
         --green: #17775f;
         --gold: #a36913;
-        --paper: #f8fafc;
+        --paper: #f3f7f8;
+        --night: #071520;
         --white: #ffffff;
       }
 
@@ -27,7 +29,10 @@
 
       body {
         margin: 0;
-        background: var(--paper);
+        background:
+          radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28rem),
+          radial-gradient(circle at 85% 4rem, rgba(163, 105, 19, 0.16), transparent 22rem),
+          var(--paper);
         color: var(--ink);
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -74,16 +79,17 @@
 
       .hero {
         display: grid;
-        gap: 34px;
-        padding: 64px 0 44px;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 28px;
+        padding: 56px 0 34px;
       }
 
       h1 {
-        max-width: 880px;
         margin: 0;
-        font-size: clamp(42px, 8vw, 78px);
+        font-size: clamp(40px, 7vw, 76px);
         line-height: 0.98;
-        letter-spacing: 0;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
       }
 
       .lead {
@@ -91,6 +97,44 @@
         margin: 0;
         color: var(--muted);
         font-size: clamp(18px, 2vw, 22px);
+      }
+
+      .hero-card {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 20% 0, rgba(34, 211, 238, 0.24), transparent 16rem),
+          linear-gradient(135deg, #071520, #0b4158 70%, #0b2a3c);
+        color: white;
+        padding: clamp(30px, 5vw, 48px);
+        box-shadow: 0 24px 80px rgba(7, 21, 32, 0.22);
+      }
+
+      .mission-card {
+        align-self: stretch;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.82);
+        padding: clamp(26px, 4vw, 34px);
+        box-shadow: 0 18px 60px rgba(16, 32, 47, 0.09);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        border-radius: 999px;
+        background: rgba(34, 211, 238, 0.16);
+        color: #b9f6ff;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .mission-card .eyebrow {
+        background: #e9f7f8;
+        color: var(--blue);
       }
 
       .actions {
@@ -117,6 +161,18 @@
         color: var(--blue);
       }
 
+      .hero-card .button {
+        border-color: white;
+        background: white;
+        color: var(--night);
+      }
+
+      .hero-card .button.secondary {
+        border-color: rgba(255, 255, 255, 0.46);
+        background: transparent;
+        color: white;
+      }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -126,9 +182,28 @@
 
       .panel {
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 20px;
         background: var(--white);
-        padding: 22px;
+        padding: 24px;
+        box-shadow: 0 14px 40px rgba(16, 32, 47, 0.06);
+      }
+
+      .panel .tag {
+        display: inline-flex;
+        margin-bottom: 14px;
+        border-radius: 999px;
+        background: #fff4df;
+        color: #8a560e;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .panel .card-action {
+        display: inline-flex;
+        margin-top: 20px;
+        color: var(--blue);
+        font-weight: 800;
       }
 
       h2 {
@@ -187,6 +262,7 @@
           flex-direction: column;
         }
 
+        .hero,
         .grid,
         .metrics {
           grid-template-columns: 1fr;
@@ -213,30 +289,55 @@
 
     <main>
       <section class="hero" id="mission">
-        <h1>Helping the best ideas grow, launch, and change the world.</h1>
-        <p class="lead">
-          A trusted platform where early software founders get structured feedback, protect
-          their ideas, improve their products, and earn the support needed to reach the market
-          with real impact.
-        </p>
-        <div class="actions">
-          <a class="button" href="#platform">Review the MVP</a>
-          <a class="button secondary" href="#trust">See protection model</a>
+        <div class="hero-card">
+          <span class="eyebrow">Large-scale collaboration</span>
+          <h1>The ultimate advantage of humans is their ability to collaborate at large scale.</h1>
+          <p class="lead">
+            We believe the future is open source, academic research, and finding new ways to solve existing problems.
+          </p>
+          <div class="actions">
+            <a class="button" href="#platform">Choose your path</a>
+            <a class="button secondary" href="#trust">See protection model</a>
+          </div>
+        </div>
+        <div class="mission-card">
+          <span class="eyebrow">Mission statement</span>
+          <h2>This is a beautiful problem we want to solve.</h2>
+          <p>
+            There are people who succeed and build something great. Now they want to give back,
+            support others, and share their experience.
+          </p>
+          <br />
+          <p>
+            There are also people with brilliant ideas who want to change the world, succeed, and
+            make an impact, but they need help, guidance, and support. We want to connect them.
+          </p>
+          <br />
+          <p>
+            And there are people who want to learn, gain experience, and work on great ideas.
+            Today, there is no trusted place for all of them to meet each other.
+          </p>
         </div>
       </section>
 
       <section class="grid" id="platform">
         <article class="panel">
-          <h3>Founder Workspace</h3>
-          <p>Protected submissions, GitHub-native project setup, version iteration, feedback review, and expert support requests.</p>
+          <span class="tag">Share experience</span>
+          <h3>I am a mentor</h3>
+          <p>I believe the ultimate measurement of individual impact is how many others they inspired, lifted, or motivated to positively change the world we live in.</p>
+          <a class="card-action" href="https://github.com/jakub-zdenek/4founders#readme">Create mentor profile -&gt;</a>
         </article>
         <article class="panel">
-          <h3>Reviewer Workflow</h3>
-          <p>Rubric scoring, structured written feedback, confidence votes, useful reputation signals, and trust-weighted review paths.</p>
+          <span class="tag">Join early</span>
+          <h3>I want to test, participate, and gain experience</h3>
+          <p>I want to help test, give useful feedback, and be one of the early adopters who helps promising ideas become real products.</p>
+          <a class="card-action" href="https://github.com/jakub-zdenek/4founders#readme">Create participant profile -&gt;</a>
         </article>
         <article class="panel">
-          <h3>Expert Finalization</h3>
-          <p>Launch readiness assessments, blockers, fixes, disclosure constraints, and go-live recommendations for selected projects.</p>
+          <span class="tag">Build with support</span>
+          <h3>I have a great idea or problem to solve</h3>
+          <p>We believe the world belongs to the crazy ones, because the people who are crazy enough to think they can change the world are the ones who do.</p>
+          <a class="card-action" href="https://github.com/jakub-zdenek/4founders#readme">Create founder profile -&gt;</a>
         </article>
       </section>
 

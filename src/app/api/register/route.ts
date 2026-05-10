@@ -2,13 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { RoleType } from "@prisma/client";
+import { Prisma, RoleType } from "@prisma/client";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(80),
   email: z.string().email(),
   password: z.string().min(8).max(128),
+  intent: z.enum(["founder", "mentor", "participant"]).default("founder"),
 });
+
+const intentConfig = {
+  founder: {
+    role: RoleType.FOUNDER,
+    redirectPath: "/app/projects/new",
+  },
+  mentor: {
+    role: RoleType.SENIOR_EXPERT,
+    redirectPath: "/app/expert",
+  },
+  participant: {
+    role: RoleType.REVIEWER,
+    redirectPath: "/app/reviews",
+  },
+} as const;
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,32 +36,61 @@ export async function POST(request: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(payload.password, 10);
+    const selected = intentConfig[payload.intent];
 
-    const founderRole = await prisma.role.upsert({
-      where: { type: RoleType.FOUNDER },
+    const role = await prisma.role.upsert({
+      where: { type: selected.role },
       update: {},
-      create: { type: RoleType.FOUNDER },
+      create: { type: selected.role },
     });
 
-    const user = await prisma.user.create({
-      data: {
-        name: payload.name,
-        email: payload.email,
-        passwordHash,
-        userRoles: {
-          create: {
-            roleId: founderRole.id,
-          },
-        },
-        founderProfile: {
-          create: {
-            tagline: "New founder on 4Founders",
+    const data: Prisma.UserCreateInput = {
+      name: payload.name,
+      email: payload.email,
+      passwordHash,
+      userRoles: {
+        create: {
+          role: {
+            connect: {
+              id: role.id,
+            },
           },
         },
       },
+    };
+
+    if (payload.intent === "mentor") {
+      data.expertProfile = {
+        create: {
+          specialty: "Founder mentorship and launch guidance",
+          yearsExperience: 10,
+        },
+      };
+    }
+
+    if (payload.intent === "participant") {
+      data.reviewerProfile = {
+        create: {
+          trustScore: 0,
+          reputationScore: 0,
+          reviewCount: 0,
+        },
+      };
+    }
+
+    if (payload.intent === "founder") {
+      data.founderProfile = {
+        create: {
+          tagline: "Building a new idea on 4Founders",
+        },
+      };
+    }
+
+    const user = await prisma.user.create({
+      data,
     });
 
-    return NextResponse.json({ id: user.id }, { status: 201 });
+    return NextResponse.json({ id: user.id, redirectPath: selected.redirectPath }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Invalid registration payload" }, { status: 400 });
   }

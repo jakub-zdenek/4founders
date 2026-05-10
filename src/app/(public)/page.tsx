@@ -6,51 +6,111 @@ import { Badge } from "@/components/ui/badge";
 
 export const dynamic = "force-dynamic";
 
+const paths = [
+  {
+    title: "I am a mentor",
+    href: "/register?intent=mentor",
+    eyebrow: "Share experience",
+    quote:
+      "I believe the ultimate measurement of individual impact is how many others they inspired, lifted, or motivated to positively change the world we live in.",
+    cta: "Create mentor profile",
+  },
+  {
+    title: "I want to test, participate, and gain experience",
+    href: "/register?intent=participant",
+    eyebrow: "Join early",
+    quote:
+      "I want to help test, give useful feedback, and be one of the early adopters who helps promising ideas become real products.",
+    cta: "Create participant profile",
+  },
+  {
+    title: "I have a great idea or problem to solve",
+    href: "/register?intent=founder",
+    eyebrow: "Build with support",
+    quote:
+      "We believe the world belongs to the crazy ones, because the people who are crazy enough to think they can change the world are the ones who do.",
+    cta: "Create founder profile",
+  },
+];
+
 export default async function HomePage() {
-  const featured = await prisma.project.findMany({
-    where: {
-      visibilityMode: "PUBLIC",
-      isFeaturedPublic: true,
-    },
-    include: { category: true },
-    take: 4,
-    orderBy: { updatedAt: "desc" },
-  });
+  const featured = await prisma.project
+    .findMany({
+      where: {
+        visibilityMode: "PUBLIC",
+        isFeaturedPublic: true,
+      },
+      include: { category: true },
+      take: 4,
+      orderBy: { updatedAt: "desc" },
+    })
+    .catch(() => []);
 
   return (
     <div className="space-y-16">
-      <section className="rounded-2xl border border-border bg-white p-8 md:p-12">
-        <Badge className="bg-cyan-50 text-cyan-700">Trusted Launch Platform</Badge>
-        <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
-          Helping the best ideas grow, launch, and change the world.
-        </h1>
-        <p className="mt-4 max-w-3xl text-lg text-slate-700">
-          A trusted platform where early software founders get structured feedback, protect their ideas,
-          improve their products, and earn the support needed to reach the market with real impact.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/register">
-            <Button size="lg">Start as Founder</Button>
-          </Link>
-          <Link href="/how-it-works">
-            <Button size="lg" variant="outline">
-              How It Works
-            </Button>
-          </Link>
+      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 text-white shadow-sm">
+        <div className="relative grid gap-10 p-8 md:p-12 lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.22),transparent_28%),radial-gradient(circle_at_88%_10%,rgba(245,158,11,0.18),transparent_26%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(12,74,110,0.9))]" />
+          <div className="relative">
+            <Badge className="bg-cyan-100 text-cyan-900 hover:bg-cyan-100">Large-scale collaboration</Badge>
+            <h1 className="mt-6 max-w-4xl text-4xl font-black uppercase leading-[0.98] tracking-tight md:text-6xl">
+              The ultimate advantage of humans is their ability to collaborate at large scale.
+            </h1>
+            <p className="mt-6 max-w-3xl text-xl leading-8 text-cyan-50">
+              We believe the future is open source, academic research, and finding new ways to solve
+              existing problems.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="#choose-path">
+                <Button size="lg" className="bg-white text-slate-950 hover:bg-cyan-50">
+                  Choose your path
+                </Button>
+              </Link>
+              <Link href="/how-it-works">
+                <Button size="lg" variant="outline" className="border-white/50 bg-transparent text-white hover:bg-white/10">
+                  How it works
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative rounded-3xl border border-white/15 bg-white/10 p-6 shadow-2xl backdrop-blur">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-100">Mission statement</p>
+            <h2 className="mt-4 text-2xl font-bold leading-tight">This is a beautiful problem we want to solve.</h2>
+            <div className="mt-5 space-y-4 text-sm leading-7 text-slate-100">
+              <p>
+                There are people who succeed and build something great. Now they want to give back,
+                support others, and share their experience.
+              </p>
+              <p>
+                There are also people with brilliant ideas who want to change the world, succeed,
+                and make an impact, but they need help, guidance, and support. We want to connect them.
+              </p>
+              <p>
+                And there are people who want to learn, gain experience, and work on great ideas.
+                Today, there is no trusted place for all of them to meet each other.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          ["For Founders", "Protect sensitive work while getting high-signal feedback and a clear launch path."],
-          ["For Reviewers", "Contribute structured reviews that are weighted by quality and trust."],
-          ["For Experts", "Help strong products finalize before go-live with focused technical guidance."],
-        ].map(([title, text]) => (
-          <Card key={title}>
+      <section id="choose-path" className="grid gap-5 md:grid-cols-3">
+        {paths.map((path) => (
+          <Card key={path.title} className="group flex h-full flex-col border-slate-200 bg-white transition hover:-translate-y-1 hover:shadow-xl">
             <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{text}</CardDescription>
+              <Badge className="w-fit bg-amber-50 text-amber-800 hover:bg-amber-50">{path.eyebrow}</Badge>
+              <CardTitle className="mt-3 text-2xl leading-tight">{path.title}</CardTitle>
+              <CardDescription className="text-base leading-7">{path.quote}</CardDescription>
             </CardHeader>
+            <CardContent className="mt-auto">
+              <Link href={path.href}>
+                <Button className="w-full justify-between">
+                  {path.cta}
+                  <span aria-hidden="true">-&gt;</span>
+                </Button>
+              </Link>
+            </CardContent>
           </Card>
         ))}
       </section>
