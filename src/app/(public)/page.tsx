@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { WorkflowWindow } from "@/components/marketing/workflow-window";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,7 @@ const paths = [
 const onboardingWorkflows = [
   {
     title: "Mentor profile",
+    audience: "Experienced builders who want to give back",
     steps: [
       "Create a profile.",
       "Explain why founders should believe you can help.",
@@ -47,6 +49,7 @@ const onboardingWorkflows = [
   },
   {
     title: "Founder path",
+    audience: "People with a problem, idea, or product to build",
     steps: [
       "Create a profile and tell us your drive and motivation.",
       "Choose a restricted starting area.",
@@ -62,6 +65,7 @@ const onboardingWorkflows = [
   },
   {
     title: "Participant profile",
+    audience: "People who want to test, learn, and contribute",
     steps: [
       "Create a profile.",
       "Describe how you can support.",
@@ -154,37 +158,7 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <section className="space-y-5">
-        <div>
-          <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">Onboarding workflows</Badge>
-          <h2 className="mt-3 text-3xl font-bold text-slate-950">Three ways to join the collaboration layer</h2>
-          <p className="mt-2 max-w-3xl text-slate-600">
-            Each path collects the information needed to build trust, protect sensitive ideas, and
-            match people with the right kind of support.
-          </p>
-        </div>
-        <div className="grid gap-5 lg:grid-cols-3">
-          {onboardingWorkflows.map((workflow) => (
-            <Card key={workflow.title} className="border-slate-200 bg-white">
-              <CardHeader>
-                <CardTitle>{workflow.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ol className="space-y-3 text-sm text-slate-700">
-                  {workflow.steps.map((item) => (
-                    <li key={item} className="flex gap-3">
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-50 text-xs font-bold text-cyan-800">
-                        {workflow.steps.indexOf(item) + 1}
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ol>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <WorkflowWindow workflows={onboardingWorkflows} />
 
       <section className="grid gap-4 md:grid-cols-2">
         <Card>

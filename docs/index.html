@@ -238,37 +238,142 @@
         background: var(--white);
       }
 
-      .workflow-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
+      .workflow-window {
+        overflow: hidden;
+        margin-top: 22px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--white);
+        box-shadow: 0 24px 80px rgba(7, 21, 32, 0.12);
       }
 
-      .workflow-list {
-        display: grid;
-        gap: 12px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .workflow-list li {
+      .window-top {
         display: flex;
-        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: var(--night);
+        color: white;
+        padding: 16px 20px;
       }
 
-      .workflow-list span {
-        display: inline-flex;
-        width: 24px;
-        height: 24px;
-        flex: 0 0 24px;
-        align-items: center;
-        justify-content: center;
+      .window-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .window-dots span {
+        width: 12px;
+        height: 12px;
         border-radius: 999px;
+      }
+
+      .window-dots span:nth-child(1) { background: #fca5a5; }
+      .window-dots span:nth-child(2) { background: #fcd34d; }
+      .window-dots span:nth-child(3) { background: #86efac; }
+
+      .workflow-body {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+      }
+
+      .workflow-tabs {
+        display: grid;
+        gap: 10px;
+        align-content: start;
+        border-right: 1px solid var(--line);
+        background: #f8fafc;
+        padding: 18px;
+      }
+
+      .workflow-tab {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 14px;
+        text-align: left;
+      }
+
+      .workflow-tab strong {
+        display: block;
+        color: var(--ink);
+      }
+
+      .workflow-tab.active {
+        border-color: var(--blue);
         background: #e9f7f8;
+      }
+
+      .workflow-screen {
+        padding: clamp(22px, 5vw, 36px);
+      }
+
+      .screen-kicker {
         color: var(--blue);
         font-size: 12px;
         font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .screen-card {
+        margin-top: 22px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: linear-gradient(135deg, white, #e9f7f8);
+        padding: 24px;
+      }
+
+      .screen-card p {
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 800;
+        line-height: 1.18;
+      }
+
+      .screen-map {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .screen-map div {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .screen-map div.active {
+        border-color: var(--blue);
+        background: #e9f7f8;
+        color: var(--ink);
+      }
+
+      .workflow-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .workflow-actions button {
+        min-height: 42px;
+        border: 1px solid var(--blue);
+        border-radius: 8px;
+        background: var(--blue);
+        color: white;
+        cursor: pointer;
+        font-weight: 800;
+        padding: 0 16px;
+      }
+
+      .workflow-actions button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
       }
 
       .metrics {
@@ -297,9 +402,18 @@
 
         .hero,
         .grid,
-        .workflow-grid,
         .metrics {
           grid-template-columns: 1fr;
+        }
+
+        .workflow-body,
+        .screen-map {
+          grid-template-columns: 1fr;
+        }
+
+        .workflow-tabs {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
         }
 
         .hero {
@@ -376,46 +490,32 @@
       </section>
 
       <section class="band">
-        <h2>Onboarding workflows</h2>
-        <p class="lead">Three ways to join the collaboration layer with enough trust, clarity, and protection to make the work useful.</p>
-        <br />
-        <div class="workflow-grid">
-          <article class="panel">
-            <h3>Mentor profile</h3>
-            <ol class="workflow-list">
-              <li><span>1</span>Create a profile.</li>
-              <li><span>2</span>Explain why founders should believe you can help.</li>
-              <li><span>3</span>Describe how you can support.</li>
-              <li><span>4</span>Choose the areas where you can support.</li>
-              <li><span>5</span>Link GitHub to show credibility.</li>
-              <li><span>6</span>Share what you like to support, because passion is key.</li>
-            </ol>
-          </article>
-          <article class="panel">
-            <h3>Founder path</h3>
-            <ol class="workflow-list">
-              <li><span>1</span>Create a profile and tell us your drive and motivation.</li>
-              <li><span>2</span>Choose a restricted starting area.</li>
-              <li><span>3</span>Explain the problem you want to solve and why.</li>
-              <li><span>4</span>Describe who benefits and who the user is.</li>
-              <li><span>5</span>Explain how you want to solve it.</li>
-              <li><span>6</span>Add a short video or presentation.</li>
-              <li><span>7</span>Choose public, semi-private, or private review mode.</li>
-              <li><span>8</span>Tell us what help and support you need.</li>
-              <li><span>9</span>Tell us if you want to start building a team.</li>
-              <li><span>10</span>Improve from feedback and see your progress over time.</li>
-            </ol>
-          </article>
-          <article class="panel">
-            <h3>Participant profile</h3>
-            <ol class="workflow-list">
-              <li><span>1</span>Create a profile.</li>
-              <li><span>2</span>Describe how you can support.</li>
-              <li><span>3</span>Choose the areas where you can support.</li>
-              <li><span>4</span>Link GitHub to show credibility.</li>
-              <li><span>5</span>Share what you like to support, because passion is key.</li>
-            </ol>
-          </article>
+        <h2>Guided workflow window</h2>
+        <p class="lead">Choose a path, then move screen by screen. Each workflow asks for one focused answer at a time.</p>
+        <div class="workflow-window">
+          <div class="window-top">
+            <div class="window-dots"><span></span><span></span><span></span></div>
+            <strong>4Founders onboarding</strong>
+          </div>
+          <div class="workflow-body">
+            <div class="workflow-tabs">
+              <button class="workflow-tab active" type="button" data-workflow="0"><strong>Mentor profile</strong>Experienced builders who want to give back</button>
+              <button class="workflow-tab" type="button" data-workflow="1"><strong>Founder path</strong>People with a problem, idea, or product</button>
+              <button class="workflow-tab" type="button" data-workflow="2"><strong>Participant profile</strong>People who want to test, learn, and contribute</button>
+            </div>
+            <div class="workflow-screen">
+              <p class="screen-kicker" id="workflow-kicker">Screen 1 of 6</p>
+              <h3 id="workflow-title">Mentor profile</h3>
+              <div class="screen-card">
+                <p id="workflow-step">Create a profile.</p>
+              </div>
+              <div class="screen-map" id="workflow-map"></div>
+              <div class="workflow-actions">
+                <button id="workflow-prev" type="button" disabled>Previous screen</button>
+                <button id="workflow-next" type="button">Next screen</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -443,5 +543,88 @@
     <footer>
       4Founders MVP. Full application requires a Node host and PostgreSQL; this static page is GitHub Pages compatible.
     </footer>
+    <script>
+      const workflows = [
+        {
+          title: "Mentor profile",
+          steps: [
+            "Create a profile.",
+            "Explain why founders should believe you can help.",
+            "Describe how you can support.",
+            "Choose the areas where you can support.",
+            "Link GitHub to show credibility.",
+            "Share what you like to support, because passion is key.",
+          ],
+        },
+        {
+          title: "Founder path",
+          steps: [
+            "Create a profile and tell us your drive and motivation.",
+            "Choose a restricted starting area.",
+            "Explain the problem you want to solve and why.",
+            "Describe who benefits and who the user is.",
+            "Explain how you want to solve it.",
+            "Add a short video or presentation.",
+            "Choose public, semi-private, or private review mode.",
+            "Tell us what help and support you need.",
+            "Tell us if you want to start building a team.",
+            "Improve from feedback and see your progress over time.",
+          ],
+        },
+        {
+          title: "Participant profile",
+          steps: [
+            "Create a profile.",
+            "Describe how you can support.",
+            "Choose the areas where you can support.",
+            "Link GitHub to show credibility.",
+            "Share what you like to support, because passion is key.",
+          ],
+        },
+      ];
+
+      let activeWorkflow = 0;
+      let activeStep = 0;
+      const tabs = Array.from(document.querySelectorAll("[data-workflow]"));
+      const kicker = document.getElementById("workflow-kicker");
+      const title = document.getElementById("workflow-title");
+      const step = document.getElementById("workflow-step");
+      const map = document.getElementById("workflow-map");
+      const prev = document.getElementById("workflow-prev");
+      const next = document.getElementById("workflow-next");
+
+      function renderWorkflow() {
+        const workflow = workflows[activeWorkflow];
+        kicker.textContent = `Screen ${activeStep + 1} of ${workflow.steps.length}`;
+        title.textContent = workflow.title;
+        step.textContent = workflow.steps[activeStep];
+        prev.disabled = activeStep === 0;
+        next.disabled = activeStep === workflow.steps.length - 1;
+        tabs.forEach((tab, index) => tab.classList.toggle("active", index === activeWorkflow));
+        map.innerHTML = workflow.steps
+          .map((item, index) => `<div class="${index === activeStep ? "active" : ""}"><strong>Screen ${index + 1}:</strong> ${item}</div>`)
+          .join("");
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          activeWorkflow = Number(tab.dataset.workflow);
+          activeStep = 0;
+          renderWorkflow();
+        });
+      });
+
+      prev.addEventListener("click", () => {
+        activeStep = Math.max(0, activeStep - 1);
+        renderWorkflow();
+      });
+
+      next.addEventListener("click", () => {
+        activeStep = Math.min(workflows[activeWorkflow].steps.length - 1, activeStep + 1);
+        renderWorkflow();
+      });
+
+      renderWorkflow();
+    </script>
   </body>
 </html>
