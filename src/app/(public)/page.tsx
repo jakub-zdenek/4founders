@@ -38,6 +38,7 @@ const onboardingWorkflows = [
   {
     title: "Mentor profile",
     audience: "Experienced builders who want to give back",
+    href: "/register?intent=mentor",
     steps: [
       "Create a profile.",
       "Explain why founders should believe you can help.",
@@ -50,6 +51,7 @@ const onboardingWorkflows = [
   {
     title: "Founder path",
     audience: "People with a problem, idea, or product to build",
+    href: "/register?intent=founder",
     steps: [
       "Create a profile and tell us your drive and motivation.",
       "Choose a restricted starting area.",
@@ -66,6 +68,7 @@ const onboardingWorkflows = [
   {
     title: "Participant profile",
     audience: "People who want to test, learn, and contribute",
+    href: "/register?intent=participant",
     steps: [
       "Create a profile.",
       "Describe how you can support.",

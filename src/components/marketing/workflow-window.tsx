@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 type Workflow = {
   title: string;
   audience: string;
+  href: string;
   steps: string[];
 };
 
@@ -116,6 +118,15 @@ export function WorkflowWindow({ workflows }: { workflows: Workflow[] }) {
               >
                 Next screen
               </Button>
+            </div>
+            <div className="mt-5 rounded-2xl border border-cyan-200 bg-cyan-50 p-4">
+              <p className="text-sm text-cyan-950">
+                Ready to input your information? Start this workflow and we will guide you through
+                the profile screens one by one.
+              </p>
+              <Link href={workflow.href} className="mt-3 inline-flex">
+                <Button type="button">Start this workflow</Button>
+              </Link>
             </div>
           </div>
         </div>

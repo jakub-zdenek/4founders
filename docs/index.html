@@ -376,6 +376,81 @@
         opacity: 0.45;
       }
 
+      .profile-builder {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 20px;
+        margin-top: 22px;
+      }
+
+      .profile-paths {
+        display: grid;
+        gap: 10px;
+        align-content: start;
+      }
+
+      .profile-paths button {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 14px;
+        text-align: left;
+      }
+
+      .profile-paths button.active {
+        border-color: var(--blue);
+        background: #e9f7f8;
+        color: var(--ink);
+      }
+
+      .profile-form-window {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: white;
+        padding: 22px;
+      }
+
+      .profile-field {
+        display: grid;
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .profile-field label {
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .profile-field input,
+      .profile-field textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font: inherit;
+        padding: 11px 12px;
+      }
+
+      .profile-field textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      .profile-result {
+        display: none;
+        margin-top: 18px;
+        border: 1px solid #bae6fd;
+        border-radius: 16px;
+        background: #e9f7f8;
+        padding: 18px;
+      }
+
+      .profile-result.visible {
+        display: block;
+      }
+
       .metrics {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -407,6 +482,7 @@
         }
 
         .workflow-body,
+        .profile-builder,
         .screen-map {
           grid-template-columns: 1fr;
         }
@@ -519,6 +595,27 @@
         </div>
       </section>
 
+      <section class="band" id="profile-builder">
+        <h2>Create your profile</h2>
+        <p class="lead">Input your information according to the workflow. On GitHub Pages this creates a local MVP preview profile in your browser.</p>
+        <div class="profile-builder">
+          <div class="profile-paths">
+            <button class="active" type="button" data-profile-path="mentor"><strong>Mentor</strong><br />Credibility, support, area, GitHub, passion.</button>
+            <button type="button" data-profile-path="founder"><strong>Founder</strong><br />Motivation, area, problem, users, solution, sharing.</button>
+            <button type="button" data-profile-path="participant"><strong>Participant</strong><br />Support, area, GitHub, passion.</button>
+          </div>
+          <form class="profile-form-window" id="profile-form">
+            <p class="screen-kicker" id="profile-kicker">Mentor profile</p>
+            <h3 id="profile-title">Tell founders why they should believe you can help</h3>
+            <div id="profile-fields"></div>
+            <div class="workflow-actions">
+              <button id="profile-save" type="submit">Create profile preview</button>
+            </div>
+            <div class="profile-result" id="profile-result"></div>
+          </form>
+        </div>
+      </section>
+
       <section class="band" id="trust">
         <h2>Built for protected evaluation</h2>
         <div class="metrics">
@@ -625,6 +722,107 @@
       });
 
       renderWorkflow();
+
+      const profileDefinitions = {
+        mentor: {
+          kicker: "Mentor profile",
+          title: "Tell founders why they should believe you can help",
+          fields: [
+            ["name", "Your name", "input", "Ada Mentor"],
+            ["credibility", "Why founders should believe you", "textarea", "Experience, proof, lessons, or outcomes you can bring."],
+            ["support", "How you can support", "textarea", "Mentoring, code review, product feedback, introductions..."],
+            ["area", "Area where you can support", "input", "Developer productivity, AI tools, UX, infrastructure..."],
+            ["github", "GitHub link for credibility", "input", "https://github.com/your-handle"],
+            ["passion", "What you like to support", "textarea", "What kind of founders, problems, or missions energize you?"],
+          ],
+        },
+        founder: {
+          kicker: "Founder path",
+          title: "Input the story reviewers need to understand your idea",
+          fields: [
+            ["name", "Your name", "input", "Maya Founder"],
+            ["motivation", "Your drive and motivation", "textarea", "Why do you care about solving this?"],
+            ["area", "Restricted starting area", "input", "Developer Productivity / AI Builder Tools / Frontend UX / Data Infrastructure"],
+            ["problem", "Problem you want to solve and why", "textarea", "What existing problem matters enough to build around?"],
+            ["users", "Who will benefit", "textarea", "Who is the user and how will life get better for them?"],
+            ["solution", "How you want to solve it", "textarea", "Describe the approach without exposing sensitive implementation details."],
+            ["presentation", "Short video or presentation link", "input", "https://..."],
+            ["sharing", "Sharing level", "input", "public / semi-private / private review mode"],
+            ["support", "Help or support you need", "textarea", "Feedback, mentors, reviewers, beta users, teammates..."],
+            ["team", "Team-building interest", "textarea", "Who would you like to meet or recruit?"],
+          ],
+        },
+        participant: {
+          kicker: "Participant profile",
+          title: "Tell founders how you can test, learn, and contribute",
+          fields: [
+            ["name", "Your name", "input", "Rae Participant"],
+            ["support", "How you can support", "textarea", "Testing, feedback, docs, UX review, early adoption..."],
+            ["area", "Area where you can support", "input", "AI tools, frontend UX, infrastructure, developer productivity..."],
+            ["github", "GitHub link", "input", "https://github.com/your-handle"],
+            ["passion", "What you like to support", "textarea", "What ideas, users, or problems do you want to be close to?"],
+          ],
+        },
+      };
+
+      let activeProfilePath = "mentor";
+      const profilePathButtons = Array.from(document.querySelectorAll("[data-profile-path]"));
+      const profileForm = document.getElementById("profile-form");
+      const profileFields = document.getElementById("profile-fields");
+      const profileKicker = document.getElementById("profile-kicker");
+      const profileTitle = document.getElementById("profile-title");
+      const profileResult = document.getElementById("profile-result");
+
+      function escapeHtml(value) {
+        return value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderProfileForm() {
+        const definition = profileDefinitions[activeProfilePath];
+        profileKicker.textContent = definition.kicker;
+        profileTitle.textContent = definition.title;
+        profileResult.classList.remove("visible");
+        profileFields.innerHTML = definition.fields
+          .map(([key, label, type, placeholder]) => {
+            const saved = localStorage.getItem(`4founders:${activeProfilePath}:${key}`) || "";
+            const control =
+              type === "textarea"
+                ? `<textarea id="profile-${key}" name="${key}" required placeholder="${placeholder}">${saved}</textarea>`
+                : `<input id="profile-${key}" name="${key}" required placeholder="${placeholder}" value="${saved}" />`;
+            return `<div class="profile-field"><label for="profile-${key}">${label}</label>${control}</div>`;
+          })
+          .join("");
+        profilePathButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.profilePath === activeProfilePath);
+        });
+      }
+
+      profilePathButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeProfilePath = button.dataset.profilePath;
+          renderProfileForm();
+        });
+      });
+
+      profileForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(profileForm);
+        const entries = Array.from(data.entries()).map(([key, value]) => [key, String(value)]);
+        entries.forEach(([key, value]) => localStorage.setItem(`4founders:${activeProfilePath}:${key}`, value));
+        profileResult.innerHTML = `
+          <h3>${profileDefinitions[activeProfilePath].kicker} created</h3>
+          <p>This MVP preview is saved in this browser. The full Next.js app saves the same workflow data to PostgreSQL.</p>
+          <ul>${entries.map(([key, value]) => `<li><strong>${escapeHtml(key)}:</strong> ${escapeHtml(value)}</li>`).join("")}</ul>
+        `;
+        profileResult.classList.add("visible");
+      });
+
+      renderProfileForm();
     </script>
   </body>
 </html>

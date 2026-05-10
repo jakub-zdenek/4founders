@@ -12,7 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 export type ProfileIntent = "founder" | "mentor" | "participant";
 
-type ScreenId = "account" | "founderMotivation" | "credibility" | "supportApproach" | "supportAreas" | "passion";
+type ScreenId =
+  | "account"
+  | "founderMotivation"
+  | "credibility"
+  | "supportApproach"
+  | "supportAreas"
+  | "passion"
+  | "review";
 
 type Screen = {
   id: ScreenId;
@@ -57,6 +64,11 @@ const screensByIntent: Record<ProfileIntent, Screen[]> = {
       title: "Your drive and motivation",
       description: "Tell us why this problem matters to you and why you want to build.",
     },
+    {
+      id: "review",
+      title: "Review and create profile",
+      description: "Confirm your founder profile. After this, you will continue into the project workflow.",
+    },
   ],
   mentor: [
     {
@@ -84,6 +96,11 @@ const screensByIntent: Record<ProfileIntent, Screen[]> = {
       title: "What do you like to support?",
       description: "Passion is a key signal. Tell founders what kind of problems energize you.",
     },
+    {
+      id: "review",
+      title: "Review and create profile",
+      description: "Confirm your mentor profile before it is created.",
+    },
   ],
   participant: [
     {
@@ -106,6 +123,11 @@ const screensByIntent: Record<ProfileIntent, Screen[]> = {
       title: "What do you like to support?",
       description: "Share the kinds of ideas, tools, or missions you want to be close to.",
     },
+    {
+      id: "review",
+      title: "Review and create profile",
+      description: "Confirm your participant profile before it is created.",
+    },
   ],
 };
 
@@ -115,6 +137,38 @@ function readForm(form: HTMLFormElement) {
     values[key] = String(value);
   }
   return values;
+}
+
+function profileSummary(intent: ProfileIntent, values: Record<string, string>) {
+  if (intent === "founder") {
+    return [
+      ["Name", values.name],
+      ["Email", values.email],
+      ["Drive and motivation", values.founderMotivation],
+      ["Next step", "Continue into the founder project workflow."],
+    ];
+  }
+
+  if (intent === "mentor") {
+    return [
+      ["Name", values.name],
+      ["Email", values.email],
+      ["Why founders should believe you", values.credibilityStatement],
+      ["How you can support", values.supportApproach],
+      ["Support areas", values.supportAreas],
+      ["GitHub credibility", values.githubUrl || "Not provided"],
+      ["Passion", values.passionStatement],
+    ];
+  }
+
+  return [
+    ["Name", values.name],
+    ["Email", values.email],
+    ["How you can support", values.supportApproach],
+    ["Support areas", values.supportAreas],
+    ["GitHub credibility", values.githubUrl || "Not provided"],
+    ["Passion", values.passionStatement],
+  ];
 }
 
 export function RegisterForm({ intent }: { intent: ProfileIntent }) {
@@ -335,6 +389,20 @@ export function RegisterForm({ intent }: { intent: ProfileIntent }) {
                   defaultValue={draft.passionStatement ?? ""}
                   placeholder="Your passion matters. Tell founders what kind of ideas, people, or problems energize you."
                 />
+              </div>
+            )}
+
+            {screen.id === "review" && (
+              <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5">
+                <p className="text-sm font-semibold text-slate-900">Profile information to save</p>
+                <div className="grid gap-3">
+                  {profileSummary(intent, draft).map(([label, value]) => (
+                    <div key={label} className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm">
+                      <p className="font-semibold text-slate-900">{label}</p>
+                      <p className="mt-1 whitespace-pre-wrap text-slate-700">{value || "Not provided"}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
